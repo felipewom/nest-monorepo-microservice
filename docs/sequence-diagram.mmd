@@ -1,0 +1,32 @@
+sequenceDiagram
+    participant Client
+    participant API_Gateway as API Gateway
+    participant App_One as App-one (TCP)
+    participant App_Two as App-two (TCP)
+    participant Lib_ONE as Lib-ONE
+
+    %% Sequence for /ping?app=one
+    Client->>API_Gateway: /ping?app=one
+    API_Gateway->>App_One: Forward request
+    App_One-->>API_Gateway: Response from App-one
+    API_Gateway-->>Client: Response
+
+    %% Sequence for /ping?app=two
+    Client->>API_Gateway: /ping?app=two
+    API_Gateway->>App_Two: Forward request
+    App_Two-->>API_Gateway: Response from App-two
+    API_Gateway-->>Client: Response
+
+    %% Sequence for /ping-all
+    Client->>API_Gateway: /ping-all
+    API_Gateway->>App_One: Forward request to App-one
+    API_Gateway->>App_Two: Forward request to App-two
+    App_One-->>API_Gateway: Response from App-one
+    App_Two-->>API_Gateway: Response from App-two
+    API_Gateway-->>Client: Combined Response
+
+    %% Sequence for /lib
+    Client->>API_Gateway: /lib
+    API_Gateway->>Lib_ONE: Call pong method
+    Lib_ONE-->>API_Gateway: Pong response
+    API_Gateway-->>Client: Response
